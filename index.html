@@ -613,29 +613,21 @@
                     ref: 'CTF-' + Math.floor((Math.random() * 1000000000) + 1),
                     onClose: function() {
                         console.log('⚠️  Payment modal closed');
+                        // Add a "confirm payment" button as fallback
+                        setTimeout(() => {
+                            const payBtn = document.getElementById('payBtn');
+                            if (payBtn) {
+                                payBtn.textContent = 'Confirm Payment Completed?';
+                                payBtn.onclick = function() {
+                                    redirectToWhatsApp(registrationData);
+                                };
+                            }
+                        }, 500);
                     },
                     onSuccess: function(response) {
                         console.log('✅ PAYMENT SUCCESS - Response:', response);
-                        console.log('Redirecting to WhatsApp with registration code...');
-                        
-                        // Generate registration code
-                        const fullname = document.getElementById('fullname').value.trim();
-                        const registrationCode = generateUniqueCode(fullname);
-                        
-                        // Prepare message for WhatsApp
-                        const whatsappMessage = `Hi! My registration code is: ${registrationCode}`;
-                        const encodedMessage = encodeURIComponent(whatsappMessage);
-                        
-                        // WhatsApp group link with pre-filled message
-                        const whatsappLink = `https://chat.whatsapp.com/LKVOZ6H8ceN3I2qM5PR8nh?text=${encodedMessage}`;
-                        
-                        console.log('Registration Code:', registrationCode);
-                        console.log('WhatsApp Link:', whatsappLink);
-                        
-                        // Redirect to WhatsApp after a short delay
-                        setTimeout(() => {
-                            window.location.href = whatsappLink;
-                        }, 1000);
+                        console.log('Preparing WhatsApp redirect...');
+                        redirectToWhatsApp(registrationData);
                     }
                 });
                 
@@ -645,6 +637,23 @@
                 console.error('❌ Payment setup error:', error);
                 alert('Error: ' + error.message);
             }
+        }
+
+        function redirectToWhatsApp(registrationData) {
+            console.log('🔄 REDIRECTING TO WHATSAPP');
+            console.log('Registration Code:', registrationData.code);
+            
+            // Prepare message for WhatsApp
+            const whatsappMessage = `Hi! My registration code is: ${registrationData.code}`;
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // WhatsApp group link with pre-filled message
+            const whatsappLink = `https://chat.whatsapp.com/LKVOZ6H8ceN3I2qM5PR8nh?text=${encodedMessage}`;
+            
+            console.log('📱 WhatsApp URL:', whatsappLink);
+            
+            // Redirect to WhatsApp
+            window.location.href = whatsappLink;
         }
 
         function showSuccessScreen(data) {
