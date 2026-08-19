@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: url('image/calimage.jpg') center/cover no-repeat fixed;
+            background: url('assets/img/calimage.jpg') center/cover no-repeat fixed;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -371,12 +371,12 @@
                     <div><strong>✓ Step 1:</strong> Enter your details in the form</div>
                     <div><strong>✓ Step 2:</strong> Select your training track</div>
                     <div><strong>✓ Step 3:</strong> Proceed to payment (₦7,000)</div>
-                    <div><strong>✓ Step 4:</strong> After payment, WhatsApp opens automatically</div>
-                    <div><strong>✓ Step 5:</strong> Your code is already in the message</div>
-                    <div><strong>✓ Step 6:</strong> Just click SEND in WhatsApp</div>
+                    <div><strong>✓ Step 4:</strong> After payment, your code is auto-copied</div>
+                    <div><strong>✓ Step 5:</strong> Tap "Join WhatsApp Training Group"</div>
+                    <div><strong>✓ Step 6:</strong> Paste (long-press → Paste) and Send</div>
                 </div>
                 <p style="font-size: 11px; margin-top: 12px; opacity: 0.9; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px;">
-                    ✨ No need to copy/paste - everything is automatic!
+                    ✨ Your code is copied for you — no typing needed!
                 </p>
             </div>
 
@@ -416,8 +416,8 @@
                 </div>
 
                 <div class="price-info">
-                    <p>Registration Fee</p>
-                    <div class="price">₦7,000</div>
+                    <p>Registration Fee</p><p> may include charge</p>
+                    <div class="price">₦14,000</div>
                 </div>
 
                 <button type="button" class="btn btn-register" id="payBtn" onclick="initializePayment()">
@@ -460,9 +460,9 @@
                 <div style="background: #fff3cd; border-left: 4px solid #ff9800; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
                     <p style="font-weight: 600; color: #333; margin-bottom: 10px;">📋 Final Steps (Complete All):</p>
                     <div style="font-size: 13px; color: #555; line-height: 2;">
-                        <div><strong>Step 4:</strong> Copy your code below</div>
-                        <div><strong>Step 5:</strong> Click "Copy Code" button</div>
-                        <div><strong>Step 6:</strong> Join WhatsApp Group & paste your code in chat</div>
+                        <div><strong>Step 4:</strong> Your code is already copied for you</div>
+                        <div><strong>Step 5:</strong> Tap "Join WhatsApp Training Group" below</div>
+                        <div><strong>Step 6:</strong> Paste and send it in the group</div>
                     </div>
                 </div>
 
@@ -479,7 +479,7 @@
                 </button>
 
                 <div style="background: #fff3cd; border-left: 4px solid #ff9800; padding: 12px; border-radius: 6px; margin-top: 15px; font-size: 12px; color: #555;">
-                    <strong>⚠️ IMPORTANT:</strong> After clicking the button above, you MUST paste your registration code in the WhatsApp group to activate your access.
+                    <strong>⚠️ IMPORTANT:</strong> Your code was copied automatically. Open the WhatsApp group, then long-press the message box → Paste → Send to activate your access.
                 </div>
 
                 <div style="background: #e8f5e9; border: 1px solid #4caf50; border-radius: 6px; padding: 15px; margin-top: 15px; font-size: 13px;">
@@ -496,6 +496,7 @@
     <script>
         // Paystack Configuration
         const PAYSTACK_PUBLIC_KEY = 'pk_test_675bc4373c40ba8c30b97307b8dddad1e64f2ac9';
+        const WHATSAPP_GROUP_LINK = 'https://chat.whatsapp.com/LKVOZ6H8ceN3I2qM5PR8nh';
 
         let paystackReady = false;
         let paystackCheckCount = 0;
@@ -519,18 +520,18 @@
             const nameParts = fullname.trim().split(/\s+/);
             const firstName = nameParts[0] || '';
             const lastName = nameParts[nameParts.length - 1] || '';
-            
+
             // Get initials
             const firstInitial = firstName.charAt(0).toUpperCase();
             const lastInitial = lastName.charAt(0).toUpperCase();
-            
+
             // Generate 10 random alphanumeric characters (numbers + uppercase letters)
             const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             let randomPart = '';
             for (let i = 0; i < 10; i++) {
                 randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-            
+
             // Combine: Initials (2 chars) + Random (10 chars) = 12 total
             const code = firstInitial + lastInitial + randomPart;
             console.log(`Generated code for ${fullname}: ${code}`);
@@ -539,7 +540,7 @@
 
         function validateForm() {
             let isValid = true;
-            
+
             // Clear previous errors
             document.getElementById('fullnameError').textContent = '';
             document.getElementById('emailError').textContent = '';
@@ -577,7 +578,7 @@
 
         function initializePayment() {
             console.log('=== PAYMENT INITIATED ===');
-            
+
             if (!validateForm()) {
                 console.log('❌ Form validation failed');
                 return;
@@ -609,11 +610,12 @@
                 const handler = PaystackPop.setup({
                     key: PAYSTACK_PUBLIC_KEY,
                     email: email,
-                    amount: 700000,
+                    amount: 1400000,
                     ref: 'CTF-' + Math.floor((Math.random() * 1000000000) + 1),
                     onClose: function() {
                         console.log('⚠️  Payment modal closed');
-                        // Add a "confirm payment" button as fallback
+                        // Fallback in case the user closed the modal without paying,
+                        // or after paying but before the callback fired.
                         setTimeout(() => {
                             const payBtn = document.getElementById('payBtn');
                             if (payBtn) {
@@ -624,13 +626,18 @@
                             }
                         }, 500);
                     },
-                    onSuccess: function(response) {
+                    // NOTE: Paystack Inline v1 (js.paystack.co/v1/inline.js) fires the
+                    // success callback via the "callback" key, NOT "onSuccess".
+                    // "onSuccess" is a v2 (PaystackPop.newTransaction/checkout) API name
+                    // and is silently ignored by v1's setup(), which is why the redirect
+                    // was never firing before.
+                    callback: function(response) {
                         console.log('✅ PAYMENT SUCCESS - Response:', response);
                         console.log('Preparing WhatsApp redirect...');
                         redirectToWhatsApp(registrationData);
                     }
                 });
-                
+
                 handler.openIframe();
                 console.log('🔓 Payment iframe opened');
             } catch (error) {
@@ -640,26 +647,34 @@
         }
 
         function redirectToWhatsApp(registrationData) {
-            console.log('🔄 REDIRECTING TO WHATSAPP');
+            console.log('✅ PAYMENT CONFIRMED - showing success screen');
             console.log('Registration Code:', registrationData.code);
-            
-            // Prepare message for WhatsApp
-            const whatsappMessage = `Hi! My registration code is: ${registrationData.code}`;
-            const encodedMessage = encodeURIComponent(whatsappMessage);
-            
-            // WhatsApp group link with pre-filled message
-            const whatsappLink = `https://chat.whatsapp.com/LKVOZ6H8ceN3I2qM5PR8nh?text=${encodedMessage}`;
-            
-            console.log('📱 WhatsApp URL:', whatsappLink);
-            
-            // Redirect to WhatsApp
-            window.location.href = whatsappLink;
+
+            // Show the success screen with the code, name, email, track etc.
+            showSuccessScreen(registrationData);
+
+            // NOTE: chat.whatsapp.com group-invite links do NOT support a
+            // "?text=" query parameter to pre-fill a chat message — that only
+            // works on wa.me/<number>?text=... links to an individual chat,
+            // and WhatsApp deliberately doesn't allow pre-filling text into a
+            // group. So instead of auto-redirecting, we copy the code to the
+            // clipboard here and let the user tap "Join WhatsApp Training
+            // Group" (joinWhatsApp()) themselves when ready to paste + send.
+            const message = `Hi! My registration code is: ${registrationData.code}`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(message)
+                    .then(() => console.log('✅ Code copied to clipboard'))
+                    .catch(err => console.warn('⚠️  Clipboard write failed:', err));
+            } else {
+                console.warn('⚠️  Clipboard API not available');
+            }
         }
 
         function showSuccessScreen(data) {
             console.log('=== SHOWING SUCCESS SCREEN ===');
             console.log('Data received:', data);
-            
+
             try {
                 // STEP 1: Hide form
                 console.log('Step 1: Hiding form...');
@@ -670,7 +685,7 @@
                 } else {
                     console.warn('⚠️  Form element not found');
                 }
-                
+
                 // STEP 2: Show success screen
                 console.log('Step 2: Showing success screen...');
                 const successScreen = document.getElementById('successScreen');
@@ -682,38 +697,37 @@
                     console.error('❌ Success screen element not found');
                     return;
                 }
-                
+
                 // STEP 3: Fill in the code FIRST (most important)
                 console.log('Step 3: Displaying registration code...');
                 const codeEl = document.getElementById('codeDisplay');
                 if (codeEl) {
                     codeEl.textContent = data.code;
-                    codeEl.innerHTML = data.code; // Double assignment for safety
                     console.log('✅ Code set:', data.code);
                 } else {
                     console.error('❌ Code display element not found');
                 }
-                
+
                 // STEP 4: Fill registrant info
                 console.log('Step 4: Filling registrant info...');
                 const nameEl = document.getElementById('displayName');
                 const emailEl = document.getElementById('displayEmail');
                 const trackEl = document.getElementById('displayTrack');
-                
+
                 if (nameEl) {
                     nameEl.textContent = data.fullname;
                     console.log('✅ Name set:', data.fullname);
                 } else {
                     console.warn('⚠️  Name element not found');
                 }
-                
+
                 if (emailEl) {
                     emailEl.textContent = data.email;
                     console.log('✅ Email set:', data.email);
                 } else {
                     console.warn('⚠️  Email element not found');
                 }
-                
+
                 if (trackEl) {
                     const trackName = data.track === 'ai-skills' ? '4 Weeks AI Skill for Business and Working Class' : '4 Weeks AI Website and Mobile App Development';
                     trackEl.textContent = trackName;
@@ -721,12 +735,12 @@
                 } else {
                     console.warn('⚠️  Track element not found');
                 }
-                
+
                 // STEP 5: Store data
                 console.log('Step 5: Storing data...');
                 sessionStorage.setItem('registrationData', JSON.stringify(data));
                 console.log('✅ Data stored in sessionStorage');
-                
+
                 // STEP 6: Scroll to code
                 console.log('Step 6: Scrolling to code...');
                 setTimeout(() => {
@@ -736,9 +750,9 @@
                         console.log('✅ Scrolled to code');
                     }
                 }, 500);
-                
+
                 console.log('=== SUCCESS SCREEN COMPLETE ===');
-                
+
             } catch (error) {
                 console.error('❌ Error in showSuccessScreen:', error);
                 console.error('Error stack:', error.stack);
@@ -749,13 +763,15 @@
         function copyCode() {
             const code = document.getElementById('codeDisplay').textContent;
             console.log('Copying code:', code);
-            
+
             if (!code) {
                 alert('No code to copy. Please refresh the page.');
                 return;
             }
-            
-            navigator.clipboard.writeText(code).then(() => {
+
+            const message = `Hi! My registration code is: ${code}`;
+
+            navigator.clipboard.writeText(message).then(() => {
                 console.log('✅ Code copied successfully');
                 const feedback = document.getElementById('copiedFeedback');
                 if (feedback) {
@@ -772,15 +788,14 @@
 
         function joinWhatsApp() {
             console.log('Opening WhatsApp group');
-            const whatsappUrl = 'https://chat.whatsapp.com/LKVOZ6H8ceN3I2qM5PR8nh?s=cl&p=a&mlu=4';
-            
+
             // Try to open in new window
-            const newWindow = window.open(whatsappUrl, '_blank');
-            
+            const newWindow = window.open(WHATSAPP_GROUP_LINK, '_blank');
+
             // Fallback if popup is blocked
             if (!newWindow) {
                 console.log('Popup blocked, using redirect');
-                window.location.href = whatsappUrl;
+                window.location.href = WHATSAPP_GROUP_LINK;
             }
         }
     </script>
