@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calabar Tech For All - Registration</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
-    <script src="https://checkout.paystack.com/v1/inline.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <style>
         * {
             margin: 0;
@@ -456,17 +456,22 @@
 
     <script>
         // Paystack Configuration
-        const PAYSTACK_PUBLIC_KEY = 'pk_test_675bc4373c40ba8c30b97307b8dddad1e64f2ac9'; // Change this to your key
+        const PAYSTACK_PUBLIC_KEY = 'pk_test_675bc4373c40ba8c30b97307b8dddad1e64f2ac9';
 
-        // Check if PaystackPop is loaded
         let paystackReady = false;
-        
-        // Verify Paystack is loaded
+        let paystackCheckCount = 0;
+
+        // Better Paystack initialization with timeout
         const checkPaystack = setInterval(() => {
+            paystackCheckCount++;
             if (typeof PaystackPop !== 'undefined') {
                 paystackReady = true;
                 clearInterval(checkPaystack);
-                console.log('Paystack loaded successfully');
+                console.log('✅ Paystack loaded successfully');
+            }
+            if (paystackCheckCount > 50) {
+                clearInterval(checkPaystack);
+                console.error('❌ Paystack failed to load');
             }
         }, 100);
 
@@ -515,13 +520,16 @@
         }
 
         function initializePayment() {
+            console.log('Payment button clicked');
+            
             if (!validateForm()) {
+                console.log('Form validation failed');
                 return;
             }
 
-            // Check if Paystack is loaded
-            if (!paystackReady || typeof PaystackPop === 'undefined') {
-                alert('Payment system is loading. Please wait a moment and try again.');
+            if (typeof PaystackPop === 'undefined') {
+                console.error('PaystackPop not loaded');
+                alert('Payment system is loading. Please refresh and try again.');
                 return;
             }
 
@@ -530,7 +538,6 @@
             const phone = document.getElementById('phone').value.trim();
             const track = document.querySelector('input[name="track"]:checked').value;
 
-            // Store registration data
             const registrationData = {
                 fullname,
                 email,
@@ -540,27 +547,28 @@
                 timestamp: new Date().toLocaleString()
             };
 
-            // Initialize Paystack payment
-            const handler = PaystackPop.setup({
-                key: PAYSTACK_PUBLIC_KEY,
-                email: email,
-                amount: 700000, // Amount in kobo (₦7,000)
-                ref: 'CTF-' + Math.floor((Math.random() * 1000000000) + 1),
-                publicKey: PAYSTACK_PUBLIC_KEY,
-                onClose: function() {
-                    alert('Payment window closed.');
-                },
-                onSuccess: function(response) {
-                    // Payment successful
-                    showSuccessScreen(registrationData);
-                    
-                    // Here you would typically send the registration data to your backend
-                    console.log('Payment successful:', response);
-                    console.log('Registration data:', registrationData);
-                }
-            });
-            
-            handler.openIframe();
+            console.log('Starting payment for:', registrationData);
+
+            try {
+                const handler = PaystackPop.setup({
+                    key: PAYSTACK_PUBLIC_KEY,
+                    email: email,
+                    amount: 700000,
+                    ref: 'CTF-' + Math.floor((Math.random() * 1000000000) + 1),
+                    onClose: function() {
+                        console.log('Payment modal closed');
+                    },
+                    onSuccess: function(response) {
+                        console.log('✅ Payment successful:', response);
+                        showSuccessScreen(registrationData);
+                    }
+                });
+                
+                handler.openIframe();
+            } catch (error) {
+                console.error('❌ Payment error:', error);
+                alert('Payment error: ' + error.message);
+            }
         }
 
         function showSuccessScreen(data) {
