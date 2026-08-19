@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calabar Tech For All - Registration</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+    <script src="https://checkout.paystack.com/v1/inline.js"></script>
     <style>
         * {
             margin: 0;
@@ -453,10 +454,21 @@
         </div>
     </div>
 
-    <script src="https://checkout.paystack.com/v1/inline.js"></script>
     <script>
         // Paystack Configuration
         const PAYSTACK_PUBLIC_KEY = 'pk_test_675bc4373c40ba8c30b97307b8dddad1e64f2ac9'; // Change this to your key
+
+        // Check if PaystackPop is loaded
+        let paystackReady = false;
+        
+        // Verify Paystack is loaded
+        const checkPaystack = setInterval(() => {
+            if (typeof PaystackPop !== 'undefined') {
+                paystackReady = true;
+                clearInterval(checkPaystack);
+                console.log('Paystack loaded successfully');
+            }
+        }, 100);
 
         function generateUniqueCode() {
             const timestamp = Date.now().toString(36).toUpperCase();
@@ -504,6 +516,12 @@
 
         function initializePayment() {
             if (!validateForm()) {
+                return;
+            }
+
+            // Check if Paystack is loaded
+            if (!paystackReady || typeof PaystackPop === 'undefined') {
+                alert('Payment system is loading. Please wait a moment and try again.');
                 return;
             }
 
