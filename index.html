@@ -228,6 +228,11 @@
             color: #c41e1e;
             word-break: break-all;
             margin-bottom: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 2px dashed #c41e1e;
+            border-radius: 6px;
+            letter-spacing: 1px;
         }
 
         .registrant-info {
@@ -343,7 +348,8 @@
             }
 
             .code-display {
-                font-size: 20px;
+                font-size: 18px;
+                padding: 12px;
             }
         }
     </style>
@@ -358,6 +364,22 @@
 
         <!-- Content -->
         <div class="content">
+            <!-- Steps Guide -->
+            <div style="background: linear-gradient(135deg, #c41e1e 0%, #8b0000 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <p style="font-weight: 700; font-size: 14px; margin-bottom: 12px;">📋 How to Register (6 Easy Steps):</p>
+                <div style="font-size: 12px; line-height: 2;">
+                    <div><strong>✓ Step 1:</strong> Enter your details in the form</div>
+                    <div><strong>✓ Step 2:</strong> Select your training track</div>
+                    <div><strong>✓ Step 3:</strong> Proceed to payment (₦7,000)</div>
+                    <div><strong>✓ Step 4:</strong> Copy your registration code</div>
+                    <div><strong>✓ Step 5:</strong> Click "Copy Code" button</div>
+                    <div><strong>✓ Step 6:</strong> Join WhatsApp & paste code in group chat</div>
+                </div>
+                <p style="font-size: 11px; margin-top: 12px; opacity: 0.9; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px;">
+                    💡 Your registration code will have your initials + numbers for easy identification
+                </p>
+            </div>
+
             <!-- Registration Form -->
             <form id="registrationForm" class="form-screen">
                 <div class="form-group">
@@ -398,6 +420,12 @@
                     <div class="price">₦7,000</div>
                 </div>
 
+                <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 12px;">
+                    <strong style="color: #1976d2;">💡 Your Registration Code Format:</strong>
+                    <p style="color: #555; margin-top: 6px;">After payment, you'll receive a unique 12-character code like: <strong>KO9X4M2L7P1Q</strong></p>
+                    
+                </div>
+
                 <button type="button" class="btn btn-register" id="payBtn" onclick="initializePayment()">
                     Proceed to Payment
                 </button>
@@ -413,7 +441,7 @@
             <div class="success-screen" id="successScreen">
                 <div class="success-icon">✅</div>
                 <h2>Registration Successful!</h2>
-                <p>Welcome to Calabar Tech For All. Your payment has been processed and you're all set to start the training in October.</p>
+                <p>Payment confirmed! Follow the steps below to complete your registration.</p>
 
                 <div class="registrant-info">
                     <div class="info-row">
@@ -430,25 +458,42 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Amount Paid:</span>
-                        <span class="info-value">₦7,000</span>
+                        <span class="info-value">₦7,000 ✓</span>
+                    </div>
+                </div>
+
+                <!-- Step-by-step guide -->
+                <div style="background: #fff3cd; border-left: 4px solid #ff9800; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                    <p style="font-weight: 600; color: #333; margin-bottom: 10px;">📋 Final Steps (Complete All):</p>
+                    <div style="font-size: 13px; color: #555; line-height: 2;">
+                        <div><strong>Step 4:</strong> Copy your code below</div>
+                        <div><strong>Step 5:</strong> Click "Copy Code" button</div>
+                        <div><strong>Step 6:</strong> Join WhatsApp Group & paste your code in chat</div>
                     </div>
                 </div>
 
                 <div class="receipt-code">
-                    <label>Your Registration Code</label>
-                    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">Save this code for your records</p>
-                    <div class="code-display" id="codeDisplay"></div>
+                    <label>📌 Your Registration Code (Use Your Name Initials + Numbers)</label>
+                    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">This unique code identifies you. Paste it in the WhatsApp group chat to confirm your registration.</p>
+                    <div class="code-display" id="codeDisplay" style="padding: 15px; background: white; border: 2px dashed #c41e1e;"></div>
                     <button type="button" class="btn btn-copy" onclick="copyCode()">📋 Copy Code</button>
                     <div class="copied-feedback" id="copiedFeedback">✓ Code copied to clipboard!</div>
                 </div>
 
                 <button type="button" class="btn btn-whatsapp" onclick="joinWhatsApp()">
-                    ✓ I've Copied My Code → Join WhatsApp Group
+                    ✅ Join WhatsApp Training Group
                 </button>
 
-                <div class="terms" style="margin-top: 20px;">
-                    Training starts in October 2026<br>
-                    Check your email for onboarding details
+                <div style="background: #fff3cd; border-left: 4px solid #ff9800; padding: 12px; border-radius: 6px; margin-top: 15px; font-size: 12px; color: #555;">
+                    <strong>⚠️ IMPORTANT:</strong> After clicking the button above, you MUST paste your registration code in the WhatsApp group to activate your access.
+                </div>
+
+                <div style="background: #e8f5e9; border: 1px solid #4caf50; border-radius: 6px; padding: 15px; margin-top: 15px; font-size: 13px;">
+                    <p><strong style="color: #2e7d32;">✓ You're All Set!</strong></p>
+                    <p style="color: #555; margin-top: 8px;">• Your code is ready (format: 2 initials + 10 numbers)</p>
+                    <p style="color: #555;">• Join the WhatsApp group link above</p>
+                    <p style="color: #555;">• Paste your code in the group to confirm registration</p>
+                    <p style="color: #555;">• Training starts in October 2026</p>
                 </div>
             </div>
         </div>
@@ -475,10 +520,27 @@
             }
         }, 100);
 
-        function generateUniqueCode() {
-            const timestamp = Date.now().toString(36).toUpperCase();
-            const random = Math.random().toString(36).substring(2, 8).toUpperCase();
-            return `CTF-${timestamp}-${random}`;
+        function generateUniqueCode(fullname) {
+            // Extract first and last name
+            const nameParts = fullname.trim().split(/\s+/);
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts[nameParts.length - 1] || '';
+            
+            // Get initials
+            const firstInitial = firstName.charAt(0).toUpperCase();
+            const lastInitial = lastName.charAt(0).toUpperCase();
+            
+            // Generate 10 random alphanumeric characters (numbers + uppercase letters)
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let randomPart = '';
+            for (let i = 0; i < 10; i++) {
+                randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            
+            // Combine: Initials (2 chars) + Random (10 chars) = 12 total
+            const code = firstInitial + lastInitial + randomPart;
+            console.log(`Generated code for ${fullname}: ${code}`);
+            return code;
         }
 
         function validateForm() {
@@ -543,7 +605,7 @@
                 email,
                 phone,
                 track,
-                code: generateUniqueCode(),
+                code: generateUniqueCode(fullname),
                 timestamp: new Date().toLocaleString()
             };
 
@@ -572,36 +634,89 @@
         }
 
         function showSuccessScreen(data) {
-            // Hide form
-            document.querySelector('.form-screen').style.display = 'none';
+            console.log('showSuccessScreen called with data:', data);
             
-            // Display success screen
-            document.getElementById('successScreen').classList.add('show');
-            
-            // Populate registrant info
-            document.getElementById('displayName').textContent = data.fullname;
-            document.getElementById('displayEmail').textContent = data.email;
-            document.getElementById('displayTrack').textContent = data.track === 'ai-skills' ? '4 Weeks AI Skill for Business and Working Class' : '4 Weeks AI Website and Mobile App Development';
-            document.getElementById('codeDisplay').textContent = data.code;
-            
-            // Store data in sessionStorage for WhatsApp redirect
-            sessionStorage.setItem('registrationData', JSON.stringify(data));
+            try {
+                // Hide form
+                const formScreen = document.querySelector('.form-screen');
+                if (formScreen) {
+                    formScreen.style.display = 'none';
+                    console.log('Form hidden');
+                }
+                
+                // Display success screen
+                const successScreen = document.getElementById('successScreen');
+                if (successScreen) {
+                    successScreen.classList.add('show');
+                    console.log('Success screen shown');
+                }
+                
+                // Populate registrant info
+                const nameEl = document.getElementById('displayName');
+                const emailEl = document.getElementById('displayEmail');
+                const trackEl = document.getElementById('displayTrack');
+                const codeEl = document.getElementById('codeDisplay');
+                
+                if (nameEl) nameEl.textContent = data.fullname;
+                if (emailEl) emailEl.textContent = data.email;
+                if (trackEl) trackEl.textContent = data.track === 'ai-skills' ? '4 Weeks AI Skill for Business and Working Class' : '4 Weeks AI Website and Mobile App Development';
+                if (codeEl) {
+                    codeEl.textContent = data.code;
+                    console.log('✅ Code displayed:', data.code);
+                }
+                
+                // Store data in sessionStorage
+                sessionStorage.setItem('registrationData', JSON.stringify(data));
+                
+                // Scroll to code for visibility
+                setTimeout(() => {
+                    if (codeEl) {
+                        codeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 300);
+                
+            } catch (error) {
+                console.error('Error showing success screen:', error);
+                alert('Success! Your registration code: ' + data.code);
+            }
         }
 
         function copyCode() {
             const code = document.getElementById('codeDisplay').textContent;
+            console.log('Copying code:', code);
+            
+            if (!code) {
+                alert('No code to copy. Please refresh the page.');
+                return;
+            }
+            
             navigator.clipboard.writeText(code).then(() => {
+                console.log('✅ Code copied successfully');
                 const feedback = document.getElementById('copiedFeedback');
-                feedback.classList.add('show');
-                setTimeout(() => {
-                    feedback.classList.remove('show');
-                }, 2000);
+                if (feedback) {
+                    feedback.classList.add('show');
+                    setTimeout(() => {
+                        feedback.classList.remove('show');
+                    }, 3000);
+                }
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                alert('Code: ' + code + '\n\n(Copy this manually)');
             });
         }
 
         function joinWhatsApp() {
-            // Redirect to WhatsApp group
-            window.open('https://chat.whatsapp.com/LKVOZ6H8ceN3I2qM5PR8nh?s=cl&p=a&mlu=4', '_blank');
+            console.log('Opening WhatsApp group');
+            const whatsappUrl = 'https://chat.whatsapp.com/LKVOZ6H8ceN3I2qM5PR8nh?s=cl&p=a&mlu=4';
+            
+            // Try to open in new window
+            const newWindow = window.open(whatsappUrl, '_blank');
+            
+            // Fallback if popup is blocked
+            if (!newWindow) {
+                console.log('Popup blocked, using redirect');
+                window.location.href = whatsappUrl;
+            }
         }
     </script>
 </body>
