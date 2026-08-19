@@ -366,17 +366,17 @@
         <div class="content">
             <!-- Steps Guide -->
             <div style="background: linear-gradient(135deg, #c41e1e 0%, #8b0000 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                <p style="font-weight: 700; font-size: 14px; margin-bottom: 12px;">📋 How to Register (6 Easy Steps):</p>
+                <p style="font-weight: 700; font-size: 14px; margin-bottom: 12px;">📋 How to Register (Simple & Fast):</p>
                 <div style="font-size: 12px; line-height: 2;">
                     <div><strong>✓ Step 1:</strong> Enter your details in the form</div>
                     <div><strong>✓ Step 2:</strong> Select your training track</div>
                     <div><strong>✓ Step 3:</strong> Proceed to payment (₦7,000)</div>
-                    <div><strong>✓ Step 4:</strong> Copy your registration code</div>
-                    <div><strong>✓ Step 5:</strong> Click "Copy Code" button</div>
-                    <div><strong>✓ Step 6:</strong> Join WhatsApp & paste code in group chat</div>
+                    <div><strong>✓ Step 4:</strong> After payment, WhatsApp opens automatically</div>
+                    <div><strong>✓ Step 5:</strong> Your code is already in the message</div>
+                    <div><strong>✓ Step 6:</strong> Just click SEND in WhatsApp</div>
                 </div>
                 <p style="font-size: 11px; margin-top: 12px; opacity: 0.9; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px;">
-                    💡 Your registration code will have your initials + numbers for easy identification
+                    ✨ No need to copy/paste - everything is automatic!
                 </p>
             </div>
 
@@ -616,10 +616,26 @@
                     },
                     onSuccess: function(response) {
                         console.log('✅ PAYMENT SUCCESS - Response:', response);
-                        // Add delay to ensure DOM is ready
+                        console.log('Redirecting to WhatsApp with registration code...');
+                        
+                        // Generate registration code
+                        const fullname = document.getElementById('fullname').value.trim();
+                        const registrationCode = generateUniqueCode(fullname);
+                        
+                        // Prepare message for WhatsApp
+                        const whatsappMessage = `Hi! My registration code is: ${registrationCode}`;
+                        const encodedMessage = encodeURIComponent(whatsappMessage);
+                        
+                        // WhatsApp group link with pre-filled message
+                        const whatsappLink = `https://chat.whatsapp.com/LKVOZ6H8ceN3I2qM5PR8nh?text=${encodedMessage}`;
+                        
+                        console.log('Registration Code:', registrationCode);
+                        console.log('WhatsApp Link:', whatsappLink);
+                        
+                        // Redirect to WhatsApp after a short delay
                         setTimeout(() => {
-                            showSuccessScreen(registrationData);
-                        }, 500);
+                            window.location.href = whatsappLink;
+                        }, 1000);
                     }
                 });
                 
