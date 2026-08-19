@@ -14,14 +14,14 @@
         }
 
         body {
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: url('image/calimage.jpg') center/cover no-repeat fixed;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: url('image/calimage.jpg') center/cover no-repeat fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
         .container {
             width: 100%;
@@ -420,12 +420,6 @@
                     <div class="price">₦7,000</div>
                 </div>
 
-                <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 12px;">
-                    <strong style="color: #1976d2;">💡 Your Registration Code Format:</strong>
-                    <p style="color: #555; margin-top: 6px;">After payment, you'll receive a unique 12-character code like: <strong>KO9X4M2L7P1Q</strong></p>
-                    
-                </div>
-
                 <button type="button" class="btn btn-register" id="payBtn" onclick="initializePayment()">
                     Proceed to Payment
                 </button>
@@ -582,16 +576,16 @@
         }
 
         function initializePayment() {
-            console.log('Payment button clicked');
+            console.log('=== PAYMENT INITIATED ===');
             
             if (!validateForm()) {
-                console.log('Form validation failed');
+                console.log('❌ Form validation failed');
                 return;
             }
 
             if (typeof PaystackPop === 'undefined') {
-                console.error('PaystackPop not loaded');
-                alert('Payment system is loading. Please refresh and try again.');
+                console.error('❌ PaystackPop not loaded');
+                alert('Payment system not loaded. Please refresh the page.');
                 return;
             }
 
@@ -609,7 +603,7 @@
                 timestamp: new Date().toLocaleString()
             };
 
-            console.log('Starting payment for:', registrationData);
+            console.log('📝 Registration Data:', registrationData);
 
             try {
                 const handler = PaystackPop.setup({
@@ -618,66 +612,112 @@
                     amount: 700000,
                     ref: 'CTF-' + Math.floor((Math.random() * 1000000000) + 1),
                     onClose: function() {
-                        console.log('Payment modal closed');
+                        console.log('⚠️  Payment modal closed');
                     },
                     onSuccess: function(response) {
-                        console.log('✅ Payment successful:', response);
-                        showSuccessScreen(registrationData);
+                        console.log('✅ PAYMENT SUCCESS - Response:', response);
+                        // Add delay to ensure DOM is ready
+                        setTimeout(() => {
+                            showSuccessScreen(registrationData);
+                        }, 500);
                     }
                 });
                 
                 handler.openIframe();
+                console.log('🔓 Payment iframe opened');
             } catch (error) {
-                console.error('❌ Payment error:', error);
-                alert('Payment error: ' + error.message);
+                console.error('❌ Payment setup error:', error);
+                alert('Error: ' + error.message);
             }
         }
 
         function showSuccessScreen(data) {
-            console.log('showSuccessScreen called with data:', data);
+            console.log('=== SHOWING SUCCESS SCREEN ===');
+            console.log('Data received:', data);
             
             try {
-                // Hide form
+                // STEP 1: Hide form
+                console.log('Step 1: Hiding form...');
                 const formScreen = document.querySelector('.form-screen');
                 if (formScreen) {
                     formScreen.style.display = 'none';
-                    console.log('Form hidden');
+                    console.log('✅ Form hidden');
+                } else {
+                    console.warn('⚠️  Form element not found');
                 }
                 
-                // Display success screen
+                // STEP 2: Show success screen
+                console.log('Step 2: Showing success screen...');
                 const successScreen = document.getElementById('successScreen');
                 if (successScreen) {
                     successScreen.classList.add('show');
-                    console.log('Success screen shown');
+                    successScreen.style.display = 'block';
+                    console.log('✅ Success screen shown');
+                } else {
+                    console.error('❌ Success screen element not found');
+                    return;
                 }
                 
-                // Populate registrant info
+                // STEP 3: Fill in the code FIRST (most important)
+                console.log('Step 3: Displaying registration code...');
+                const codeEl = document.getElementById('codeDisplay');
+                if (codeEl) {
+                    codeEl.textContent = data.code;
+                    codeEl.innerHTML = data.code; // Double assignment for safety
+                    console.log('✅ Code set:', data.code);
+                } else {
+                    console.error('❌ Code display element not found');
+                }
+                
+                // STEP 4: Fill registrant info
+                console.log('Step 4: Filling registrant info...');
                 const nameEl = document.getElementById('displayName');
                 const emailEl = document.getElementById('displayEmail');
                 const trackEl = document.getElementById('displayTrack');
-                const codeEl = document.getElementById('codeDisplay');
                 
-                if (nameEl) nameEl.textContent = data.fullname;
-                if (emailEl) emailEl.textContent = data.email;
-                if (trackEl) trackEl.textContent = data.track === 'ai-skills' ? '4 Weeks AI Skill for Business and Working Class' : '4 Weeks AI Website and Mobile App Development';
-                if (codeEl) {
-                    codeEl.textContent = data.code;
-                    console.log('✅ Code displayed:', data.code);
+                if (nameEl) {
+                    nameEl.textContent = data.fullname;
+                    console.log('✅ Name set:', data.fullname);
+                } else {
+                    console.warn('⚠️  Name element not found');
                 }
                 
-                // Store data in sessionStorage
-                sessionStorage.setItem('registrationData', JSON.stringify(data));
+                if (emailEl) {
+                    emailEl.textContent = data.email;
+                    console.log('✅ Email set:', data.email);
+                } else {
+                    console.warn('⚠️  Email element not found');
+                }
                 
-                // Scroll to code for visibility
+                if (trackEl) {
+                    const trackName = data.track === 'ai-skills' ? '4 Weeks AI Skill for Business and Working Class' : '4 Weeks AI Website and Mobile App Development';
+                    trackEl.textContent = trackName;
+                    console.log('✅ Track set:', trackName);
+                } else {
+                    console.warn('⚠️  Track element not found');
+                }
+                
+                // STEP 5: Store data
+                console.log('Step 5: Storing data...');
+                sessionStorage.setItem('registrationData', JSON.stringify(data));
+                console.log('✅ Data stored in sessionStorage');
+                
+                // STEP 6: Scroll to code
+                console.log('Step 6: Scrolling to code...');
                 setTimeout(() => {
-                    if (codeEl) {
-                        codeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    const codeDisplay = document.getElementById('codeDisplay');
+                    if (codeDisplay) {
+                        codeDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        console.log('✅ Scrolled to code');
                     }
-                }, 300);
+                }, 500);
+                
+                console.log('=== SUCCESS SCREEN COMPLETE ===');
                 
             } catch (error) {
-                console.error('Error showing success screen:', error);
-                alert('Success! Your registration code: ' + data.code);
+                console.error('❌ Error in showSuccessScreen:', error);
+                console.error('Error stack:', error.stack);
+                alert('Registration successful!\n\nYour Code: ' + data.code + '\n\nPlease paste this in the WhatsApp group.');
             }
         }
 
