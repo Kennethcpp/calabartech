@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calabar Tech For All - Registration</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d0000 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #c41e1e 0%, #8b0000 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        /* Registration Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #c41e1e;
+            box-shadow: 0 0 0 3px rgba(196, 30, 30, 0.1);
+        }
+
+        .course-selection {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .course-option {
+            flex: 1;
+        }
+
+        .course-option input[type="radio"] {
+            display: none;
+        }
+
+        .course-option label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .course-option input[type="radio"]:checked + label {
+            border-color: #c41e1e;
+            background: rgba(196, 30, 30, 0.05);
+            color: #c41e1e;
+        }
+
+        .price-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .price-info p {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #c41e1e;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #c41e1e 0%, #8b0000 100%);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-register:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(196, 30, 30, 0.3);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error {
+            color: #c41e1e;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .success {
+            color: #27ae60;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* Success Screen Styles */
+        .success-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .success-screen.show {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            animation: slideInDown 0.6s ease;
+        }
+
+        .success-screen h2 {
+            color: #27ae60;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .success-screen p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .receipt-code {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c41e1e;
+        }
+
+        .receipt-code label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .code-display {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            color: #c41e1e;
+            word-break: break-all;
+            margin-bottom: 15px;
+        }
+
+        .registrant-info {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 13px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .info-value {
+            color: #666;
+        }
+
+        .btn-copy {
+            background: #27ae60;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .btn-copy:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1db954;
+            transform: translateY(-2px);
+        }
+
+        .copied-feedback {
+            color: #27ae60;
+            font-size: 12px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .copied-feedback.show {
+            display: block;
+        }
+
+        .terms {
+            font-size: 11px;
+            color: #999;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            margin: 0 3px;
+            animation: pulse 1.4s infinite;
+        }
+
+        .loading:nth-child(1) { animation-delay: 0s; }
+        .loading:nth-child(2) { animation-delay: 0.2s; }
+        .loading:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes pulse {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .course-selection {
+                flex-direction: column;
+            }
+
+            .code-display {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Calabar Tech For All</h1>
+            <p>4 Weeks AI Training | Oct 2026</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Registration Form -->
+            <form id="registrationForm" class="form-screen">
+                <div class="form-group">
+                    <label for="fullname">Full Name *</label>
+                    <input type="text" id="fullname" name="fullname" required placeholder="Enter your full name">
+                    <div class="error" id="fullnameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                    <div class="error" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">WhatsApp Number *</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="+234 800 123 4567">
+                    <div class="error" id="phoneError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Training Track *</label>
+                    <div class="course-selection">
+                        <div class="course-option">
+                            <input type="radio" id="track1" name="track" value="ai-skills" required>
+                            <label for="track1">AI Skills<br><span style="font-size: 12px;">(4 weeks)</span></label>
+                        </div>
+                        <div class="course-option">
+                            <input type="radio" id="track2" name="track" value="ai-web-dev" required>
+                            <label for="track2">Web & App<br><span style="font-size: 12px;">(4 weeks)</span></label>
+                        </div>
+                    </div>
+                    <div class="error" id="trackError"></div>
+                </div>
+
+                <div class="price-info">
+                    <p>Registration Fee</p>
+                    <div class="price">₦7,000</div>
+                </div>
+
+                <button type="button" class="btn btn-register" id="payBtn" onclick="initializePayment()">
+                    Proceed to Payment
+                </button>
+
+                <div class="terms">
+                    ✓ Limited slots available<br>
+                    ✓ Secure payment via Paystack<br>
+                    ✓ Instant access to WhatsApp group upon registration
+                </div>
+            </form>
+
+            <!-- Success Screen -->
+            <div class="success-screen" id="successScreen">
+                <div class="success-icon">✅</div>
+                <h2>Registration Successful!</h2>
+                <p>Welcome to Calabar Tech For All. Your payment has been processed and you're all set to start the training in October.</p>
+
+                <div class="registrant-info">
+                    <div class="info-row">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value" id="displayName"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value" id="displayEmail"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Track:</span>
+                        <span class="info-value" id="displayTrack"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Amount Paid:</span>
+                        <span class="info-value">₦7,000</span>
+                    </div>
+                </div>
+
+                <div class="receipt-code">
+                    <label>Your Registration Code</label>
+                    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">Save this code for your records</p>
+                    <div class="code-display" id="codeDisplay"></div>
+                    <button type="button" class="btn btn-copy" onclick="copyCode()">📋 Copy Code</button>
+                    <div class="copied-feedback" id="copiedFeedback">✓ Code copied to clipboard!</div>
+                </div>
+
+                <button type="button" class="btn btn-whatsapp" onclick="joinWhatsApp()">
+                    ✓ I've Copied My Code → Join WhatsApp Group
+                </button>
+
+                <div class="terms" style="margin-top: 20px;">
+                    Training starts in October 2026<br>
+                    Check your email for onboarding details
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://checkout.paystack.com/v1/inline.js"></script>
+    <script>
+        // Paystack Configuration
+        const PAYSTACK_PUBLIC_KEY = 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY_HERE'; // Change this to your key
+
+        function generateUniqueCode() {
+            const timestamp = Date.now().toString(36).toUpperCase();
+            const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+            return `CTF-${timestamp}-${random}`;
+        }
+
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.getElementById('fullnameError').textContent = '';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('phoneError').textContent = '';
+            document.getElementById('trackError').textContent = '';
+
+            const fullname = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const track = document.querySelector('input[name="track"]:checked');
+
+            if (!fullname || fullname.length < 3) {
+                document.getElementById('fullnameError').textContent = 'Please enter a valid full name';
+                isValid = false;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                isValid = false;
+            }
+
+            if (!phone || phone.length < 10) {
+                document.getElementById('phoneError').textContent = 'Please enter a valid phone number';
+                isValid = false;
+            }
+
+            if (!track) {
+                document.getElementById('trackError').textContent = 'Please select a training track';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function initializePayment() {
+            if (!validateForm()) {
+                return;
+            }
+
+            const fullname = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const track = document.querySelector('input[name="track"]:checked').value;
+
+            // Store registration data
+            const registrationData = {
+                fullname,
+                email,
+                phone,
+                track,
+                code: generateUniqueCode(),
+                timestamp: new Date().toLocaleString()
+            };
+
+            // Initialize Paystack payment
+            const handler = PaystackPop.setup({
+                key: PAYSTACK_PUBLIC_KEY,
+                email: email,
+                amount: 700000, // Amount in kobo (₦7,000)
+                ref: 'CTF-' + Math.floor((Math.random() * 1000000000) + 1),
+                publicKey: PAYSTACK_PUBLIC_KEY,
+                onClose: function() {
+                    alert('Payment window closed.');
+                },
+                onSuccess: function(response) {
+                    // Payment successful
+                    showSuccessScreen(registrationData);
+                    
+                    // Here you would typically send the registration data to your backend
+                    console.log('Payment successful:', response);
+                    console.log('Registration data:', registrationData);
+                }
+            });
+            
+            handler.openIframe();
+        }
+
+        function showSuccessScreen(data) {
+            // Hide form
+            document.querySelector('.form-screen').style.display = 'none';
+            
+            // Display success screen
+            document.getElementById('successScreen').classList.add('show');
+            
+            // Populate registrant info
+            document.getElementById('displayName').textContent = data.fullname;
+            document.getElementById('displayEmail').textContent = data.email;
+            document.getElementById('displayTrack').textContent = data.track === 'ai-skills' ? '4 Weeks AI Skill for Business and Working Class' : '4 Weeks AI Website and Mobile App Development';
+            document.getElementById('codeDisplay').textContent = data.code;
+            
+            // Store data in sessionStorage for WhatsApp redirect
+            sessionStorage.setItem('registrationData', JSON.stringify(data));
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeDisplay').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const feedback = document.getElementById('copiedFeedback');
+                feedback.classList.add('show');
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 2000);
+            });
+        }
+
+        function joinWhatsApp() {
+            // Redirect to WhatsApp group
+            window.open('https://chat.whatsapp.com/LKVOZ6H8ceN3I2qM5PR8nh?s=cl&p=a&mlu=4', '_blank');
+        }
+    </script>
+</body>
+</html>
