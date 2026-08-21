@@ -370,13 +370,13 @@
                 <div style="font-size: 12px; line-height: 2;">
                     <div><strong>✓ Step 1:</strong> Enter your details in the form</div>
                     <div><strong>✓ Step 2:</strong> Select your training track</div>
-                    <div><strong>✓ Step 3:</strong> Proceed to payment (₦7,000)</div>
-                    <div><strong>✓ Step 4:</strong> After payment, your code is auto-copied</div>
+                    <div><strong>✓ Step 3:</strong> Proceed to payment (₦4,000)</div>
+                    <div><strong>✓ Step 4:</strong> After payment, copy your</div>
                     <div><strong>✓ Step 5:</strong> Tap "Join WhatsApp Training Group"</div>
-                    <div><strong>✓ Step 6:</strong> Paste (long-press → Paste) and Send</div>
+                    <div><strong>✓ Step 6:</strong> Paste your code and Send</div>
                 </div>
                 <p style="font-size: 11px; margin-top: 12px; opacity: 0.9; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px;">
-                    ✨ Your code is copied for you — no typing needed!
+                    ✨ Your seat is secured Now! — Welcome onboard!
                 </p>
             </div>
 
@@ -417,7 +417,7 @@
 
                 <div class="price-info">
                     <p>Registration Fee</p><p> may include charge</p>
-                    <div class="price">₦14,000</div>
+                    <div class="price">₦4,000</div>
                 </div>
 
                 <button type="button" class="btn btn-register" id="payBtn" onclick="initializePayment()">
@@ -610,7 +610,7 @@
                 const handler = PaystackPop.setup({
                     key: PAYSTACK_PUBLIC_KEY,
                     email: email,
-                    amount: 1400000,
+                    amount: 400000,
                     ref: 'CTF-' + Math.floor((Math.random() * 1000000000) + 1),
                     onClose: function() {
                         console.log('⚠️  Payment modal closed');
